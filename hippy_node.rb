@@ -57,7 +57,7 @@ class HippyNode
   def printWord
     word = ""
     
-    h = parent
+    h = @parent
     while !h.root?
       word << h.character.to_s
       h = h.parent
