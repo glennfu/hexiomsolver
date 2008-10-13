@@ -182,15 +182,19 @@ class BoardLoader
       2 2 2 2
     }
     
-    if the_board[level].is_a?(String)
-      @@board = load_from_string the_board[level]
-    else
-      @@board = the_board[level]
+    begin
+      if the_board[level].is_a?(String)
+        @@board = load_from_string the_board[level]
+      else
+        @@board = the_board[level]
+      end
+    
+      $width = @@board[0].size
+      $height = @@board.size
+    
+      @@board
+    rescue
+      raise "Could not load board #{level}"
     end
-    
-    $width = @@board[0].size
-    $height = @@board.size
-    
-    @@board
   end
 end
