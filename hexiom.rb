@@ -5,31 +5,53 @@ require File.dirname(__FILE__) + "/bencher"
 LEVEL = $*[$*.index("-l")+1].to_i rescue 2
 USE_TREE = ($*[$*.index("-t")+1] == 'true' ? true : false) rescue false
 VERBOSE = ($*[$*.index("-v")+1] == 'true' ? true : false) rescue false
-
-puts " Level #{LEVEL}, " + (USE_TREE ? "Using Tree" : "Using Hash")
+SCORING_MODE = !$*.index("-score").nil?
 
 NO_SPACE = 9
 BLANK_SPACE = 8
 
-board = BoardLoader.load(LEVEL) #11)
-if VERBOSE
-  board.print
-  puts ""
-end
+if SCORING_MODE
+  puts "Scoring time for many levels #{USE_TREE ? "using Tree" : "using Hash"}:"
 
-valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
-# puts "valid pieces: #{valid_pieces.inspect}"
+  start_time = Time.now
+  [2, 3, 4, 6, 11].each do |level|
+    print "."; $stdout.flush
+    board = BoardLoader.load(level)
+    print "."; $stdout.flush
+    valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
+    print "."; $stdout.flush
+    solver = HexiomSolver.new(:tree => USE_TREE)
+    print "."; $stdout.flush
+    answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
+    print level; $stdout.flush
+  end
+  puts "\n Took: #{(Time.now - start_time)}"
+  puts Bencher.inspect
 
-start_time = Time.now
-solver = HexiomSolver.new(:tree => USE_TREE)
-answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
-if answer
-  puts " Solution found"
-  answer.print if VERBOSE
 else
-  puts " No solution found"
-end
+  puts " Level #{LEVEL}, " + (USE_TREE ? "Using Tree" : "Using Hash")
 
-puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
-# puts "Bencher Results:"
-puts Bencher.inspect
+
+  board = BoardLoader.load(LEVEL) #11)
+  if VERBOSE
+    board.print
+    puts ""
+  end
+
+  valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
+  # puts "valid pieces: #{valid_pieces.inspect}"
+
+  start_time = Time.now
+  solver = HexiomSolver.new(:tree => USE_TREE)
+  answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
+  if answer
+    puts " Solution found"
+    answer.print if VERBOSE
+  else
+    puts " No solution found"
+  end
+
+  puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
+  # puts "Bencher Results:"
+  puts Bencher.inspect
+end
