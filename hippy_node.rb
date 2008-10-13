@@ -26,8 +26,6 @@ class HippyNode
     else
       
       index = array[start]
-      # puts "array: #{array.inspect}"
-      # puts "index: #{index.inspect}"
       @children ||= []
       @children[index] ||= HippyNode.new(:character => index, :parent => self)
       @children[index].addArray(array, start + 1)
@@ -37,18 +35,21 @@ class HippyNode
   
   def addString(string, start)
     if start == string.length
+      
       unless @isWord
         HippyTree.step_word_count
         @isWord = true
       end
-      return
-    end
+
+    else
     
-    char = string[start, 1]
-    index = char.to_i
-    @children ||= []
-    @children[index] ||= HippyNode.new(:character => char, :parent => self)
-    @children[index].addString(string, start + 1)
+      char = string[start, 1]
+      index = char.to_i
+      @children ||= []
+      @children[index] ||= HippyNode.new(:character => char, :parent => self)
+      @children[index].addString(string, start + 1)
+
+    end
   end
   
   def printWord
@@ -74,18 +75,16 @@ class HippyNode
   end
   
   def include?(board, start)
-    if start == board.length
-      return word?
-    end
+    return word? if start == board.length
     
     return false if @children.nil?
     
     child = @children[board[start]]
-    # puts "#{index} :: start: #{start} :: char: #{index} :: string: #{string.inspect}" if index > 1
     if child
-      return child.include?(board, start + 1)
+      child.include?(board, start + 1)
+    else
+      false
     end
-    false
   end
   
 end

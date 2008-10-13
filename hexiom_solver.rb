@@ -1,10 +1,21 @@
+require File.dirname(__FILE__) + "/hippy_tree"
+require File.dirname(__FILE__) + "/hippy_hash"
+
 class HexiomSolver
   $transformations = [
     [0, -1], [1, 0], [1, 1], [0, 1], [-1, -1], [-1, 0]
   ]
   
   def initialize(options={})
-    @tried = HippyTree.new
+    if options[:tree]
+      @tried = HippyTree.new
+    else
+      @tried = HippyHash.new
+    end
+  end
+  
+  def tried_count
+    @tried.word_count
   end
   
   def solved?(b)

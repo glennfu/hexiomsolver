@@ -2,14 +2,16 @@ class Array
   def print
     self.each do |row|
       puts row.collect { |r| 
-        if r.nil?
-          "_"
+        if r == BLANK_SPACE
+          " _"
         elsif r == NO_SPACE
-          "x"
-        else
+          " x"
+        elsif r < 0
           r
+        else
+          " #{r}"
         end
-      }.join(" ")
+      }.join
     end
   end
 end
