@@ -50,6 +50,7 @@ is_valid?        0.003354
 solved?          0.000328
 tried_include    0.00222
 
+
 Current Status
 ==============
 
@@ -57,5 +58,13 @@ Levels 2, 3, 5, 6, 11 are fairly quick (all under 13 sec) and worth trying for t
 
 Levels 26, 30, 36 are ones I would love for it to solve, but currently aren't solved by the code.
 They fill up all memory (swap too) before finding a solution.  However I haven't tested them since the addition of the HippyTree class which I built in hopes to help with the memory problem.
+
+
+Hexiom-Solver 1
+===============
+Running:
+ruby hexiom-solver-1.rb
+will run an old version of the code.  I've kept it around for reference's sake, although the current versions, both with HippyTree and HippyHash, should be superior in every way by now.
+
 
 Copyright (c) 2008 GlennFu, LLC
