@@ -48,29 +48,64 @@ class BoardLoader
   
   # build blank board
   def self.empty_board
-    result = []
+    if @@empty_board.nil?
+      @@empty_board = []
   
-    @@board.each do |row|
-      result << row.collect { |x| 
-        if x == NO_SPACE 
-          NO_SPACE
-        elsif x < 0
-          -x
-        else
-          BLANK_SPACE
-        end
-      }
+      @@board.each do |row|
+        @@empty_board << row.collect { |x| 
+          if x == NO_SPACE 
+            NO_SPACE
+          elsif x < 0
+            -x
+          else
+            BLANK_SPACE
+          end
+        }
+      end
     end
   
-    result
+    @@empty_board
   end
   
   def current_board
     @@board
   end
   
+  def self.generate_space_counts
+    @@potential_scores = []
+    b = empty_board
+    
+    b.each_index do |x|
+      @@potential_scores[x] = []
+
+      b[x].each_index do |y|
+    
+        spaces = 0
+        $transformations.each do |transform|
+          temp_x = x + transform[0]
+          temp_y = y + transform[1]
+
+          if (temp_x >= 0 && temp_x < $width) && (temp_y >= 0 && temp_y < $height)
+            val = b[temp_x][temp_y]
+            if val != NO_SPACE
+              spaces = spaces + 1
+            end
+          end
+        end
+
+        @@potential_scores[x][y] = spaces
+      end
+    end
+  end
+  
+  def self.potential_scores
+    @@potential_scores
+  end
+  
   def self.load(level)
     the_board = {}
+    @@empty_board = nil
+    @@potential_scores = nil
 
     # level 2
     the_board[2] = [
@@ -193,10 +228,12 @@ class BoardLoader
     
       $width = @@board[0].size
       $height = @@board.size
-    
-      @@board
     rescue
       raise "Could not load board #{level}"
     end
+
+    generate_space_counts
+  
+    @@board
   end
 end

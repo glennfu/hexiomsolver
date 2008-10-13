@@ -119,6 +119,7 @@ class HexiomSolver
   end
 
   def ranked_options(b, p) #.each do |x, y|
+    Bencher.start 'ranking'
 
     options = []
 
@@ -127,25 +128,60 @@ class HexiomSolver
       b[x].each_index do |y|
         space = b[x][y]
         if space == BLANK_SPACE
-          options << [x,y]
+          if BoardLoader.potential_scores[x][y] >= p
+            sp = surrounding_pieces(b, x, y)
+            if sp <= p
+              ss = surrounding_spaces(b, x, y)
+              options << [x,y, ss, sp]
+            end
+          end
         end
       end
     end
-  
-  
+      
+      
     options.sort! do |e,f|
       # Find highest surrounding spaces
-      comp = surrounding_spaces(b, f[0], f[1]) <=> surrounding_spaces(b, e[0], e[1])
+      comp = f[2] <=> e[2]
+      # comp = BoardLoader.surrounding_spaces[f[0]][f[1]] <=> BoardLoader.surrounding_spaces[e[0]][e[1]]
+      # puts "#{BoardLoader.surrounding_spaces[f[0]][f[1]]} <=> #{BoardLoader.surrounding_spaces[e[0]][e[1]]}"
       if comp == 0
         # Then find highest score
-        surrounding_pieces(b, f[0], f[1]) <=> surrounding_pieces(b, e[0], e[1])
+        f[3] <=> e[3]
       else
         comp
       end
     end
+    
+    
+    # # Find empty spaces
+    # b.each_index do |x|
+    #   b[x].each_index do |y|
+    #     space = b[x][y]
+    #     if space == BLANK_SPACE
+    #       options << [x,y]
+    #     end
+    #   end
+    # end
+    #   
+    #   
+    # options.sort! do |e,f|
+    #   # Find highest surrounding spaces
+    #   comp = surrounding_spaces(b, f[0], f[1]) <=> surrounding_spaces(b, e[0], e[1])
+    #   if comp == 0
+    #     # Then find highest score
+    #     surrounding_pieces(b, f[0], f[1]) <=> surrounding_pieces(b, e[0], e[1])
+    #   else
+    #     comp
+    #   end
+    # end
+    
+    
   
     # puts "p: #{p}"
     # puts surrounding_spaces(b, options.first[0], options.first[1])
+  
+    Bencher.stop 'ranking'
   
     options
   end
@@ -198,6 +234,7 @@ class HexiomSolver
       end
     
       # Not surrounded by enough, and no room for more
+      # TODO: Is this still needed with the potential_scores addition?
       if piece.abs > surrounding_pieces && not_surrounded_by_blank
         return false
       end
