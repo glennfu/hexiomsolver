@@ -16,9 +16,11 @@ class HippyNode
   end
   
   def addArray(array, start)
+    
     if start == array.length
       
       unless @isWord
+        # puts printWord
         HippyTree.step_word_count
         @isWord = true
       end
@@ -55,9 +57,9 @@ class HippyNode
   def printWord
     word = ""
     
-    h = @parent
+    h = parent
     while !h.root?
-      word << h.character
+      word << h.character.to_s
       h = h.parent
     end
     
