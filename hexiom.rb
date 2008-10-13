@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + "/bencher"
 
 NO_SPACE = 9
 BLANK_SPACE = 8
-USE_TREE = true
+HippyTree::USE_TREE = false
 
 board = BoardLoader.load(5)
 board.print
@@ -24,5 +24,5 @@ else
   puts "No solution found"
 end
 
-puts "Took: #{(Time.now - start_time)}, recorded #{USE_TREE ? HippyTree.word_count : $tried_solutions.length} tries"
+puts "Took: #{(Time.now - start_time)}, recorded #{HippyTree.word_count} tries"
 puts "Bencher: #{Bencher.inspect}"

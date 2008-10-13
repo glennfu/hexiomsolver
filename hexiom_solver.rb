@@ -5,7 +5,6 @@ class HexiomSolver
   
   def initialize(options={})
     @tried = HippyTree.new
-    $tried_solutions = {}
   end
   
   def solved?(b)
@@ -81,11 +80,7 @@ class HexiomSolver
         Bencher.stop 'flat'
         
         Bencher.start 'tried_include'
-        if USE_TREE
-          tried_include = @tried.include?(flat)
-        else
-          tried_include = $tried_solutions[flat]
-        end
+        tried_include = @tried.include?(flat)
         Bencher.stop 'tried_include'
         
         Bencher.start 'area_is_valid'
@@ -96,11 +91,7 @@ class HexiomSolver
         if !tried_include
           # puts flat
           Bencher.start 'add_tried'
-          if USE_TREE
-            @tried.addString(flat)
-          else
-            $tried_solutions[flat] = true
-          end
+          @tried.addString(flat)
           Bencher.stop 'add_tried'
           
           if area_is_valid
