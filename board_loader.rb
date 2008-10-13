@@ -55,7 +55,7 @@ class BoardLoader
         elsif x < 0
           -x
         else
-          nil
+          BLANK_SPACE
         end
       }
     end

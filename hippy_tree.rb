@@ -17,20 +17,34 @@ class HippyTree
     end
   end
   
-  def addString(new_word)
+  def addBoard(board)
     if USE_TREE
-      @root.addString(new_word, 0)
+      @root.addArray(board.flatten, 0)
     else
-      @@tried_solutions[new_word] = true
+      @@tried_solutions[@@flat] = true
     end
   end
   
-  def include?(word)
+  def include?(board)
     if USE_TREE
-      @root.include?(word, 0)
+      Bencher.start 'flat'
+      @@flat = board.flatten
+      Bencher.stop 'flat'
+
+      Bencher.start 'tried_include'
+      answer = @root.include?(@@flat, 0)
+      Bencher.stop 'tried_include'
     else
-      @@tried_solutions[word]
+      Bencher.start 'flat'
+      @@flat = board.collect{|row| row.collect{|val| val.nil? ? BLANK_SPACE : val}.join}.join
+      Bencher.stop 'flat'
+
+      Bencher.start 'tried_include'
+      answer = @@tried_solutions[@@flat]
+      Bencher.stop 'tried_include'
     end
+    
+    answer
   end
   
   def printAllWords

@@ -5,12 +5,11 @@ require File.dirname(__FILE__) + "/bencher"
 
 NO_SPACE = 9
 BLANK_SPACE = 8
-HippyTree::USE_TREE = false
+HippyTree::USE_TREE = true
 
-board = BoardLoader.load(10)
+board = BoardLoader.load(5) #11)
 board.print
 puts ""
-
 
 valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
 # puts "valid pieces: #{valid_pieces.inspect}"
