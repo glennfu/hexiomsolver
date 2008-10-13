@@ -60,6 +60,17 @@ Levels 26, 30, 36 are ones I would love for it to solve, but currently aren't so
 They fill up all memory (swap too) before finding a solution.  However I haven't tested them since the addition of the HippyTree class which I built in hopes to help with the memory problem.
 
 
+TODO
+====
+
+ - Skip looking at NO_SPACE (9) since it never moves and doesn't need to be considered
+   - Possibly Try turning NO_SPACE (9) into nil so that the stored strings don't include them at all.  They shouldn't be needed there.
+   - Or in the HippyTree, skip over it when you reach a 9 instead of adding it in
+ - Make the 'ranked_options' method smarter
+ - Apply more logic to 'lock in' pieces that we know need to be placed
+ - Review the outputs more to try to find better optimizations.  When the code goes through billions of similar combinations, I'm sure many can be cut out.  When I solve games I'm certainly not considering that many solutions.  What logic does a human apply that the code currently does not use?
+
+
 Hexiom-Solver 1
 ===============
 Running:
