@@ -142,7 +142,7 @@ class HexiomSolver
       
     options.sort! do |e,f|
       # Find highest surrounding spaces
-      comp = e[2] <=> f[2]
+      comp = e[2] <=> f[2] # NOTE: The opposite order works better for level 6 only it seems...
       if comp == 0
         # Then find highest score
         f[3] <=> e[3]
@@ -173,12 +173,7 @@ class HexiomSolver
     #     comp
     #   end
     # end
-    
-    
-  
-    # puts "p: #{p}"
-    # puts surrounding_spaces(b, options.first[0], options.first[1])
-  
+      
     Bencher.stop 'ranking'
   
     options
