@@ -19,6 +19,9 @@ To select the level, do:
 To choose which 'tried tracker' to use, do:
 -t #{true | false}
 
+To show the before/after states of the board (verbose mode), do:
+-v #{true | false}
+
 
 Example 1
 =========
