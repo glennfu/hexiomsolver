@@ -7,7 +7,7 @@ NO_SPACE = 9
 BLANK_SPACE = 8
 HippyTree::USE_TREE = false
 
-board = BoardLoader.load(5)
+board = BoardLoader.load(10)
 board.print
 puts ""
 

@@ -3,9 +3,12 @@ require File.dirname(__FILE__) + "/hippy_node"
 class HippyTree
   
   def initialize(options={})
-    @root = HippyNode.new
-    @@word_count = 0
-    @@tried_solutions = {}
+    if USE_TREE
+      @root = HippyNode.new
+      @@word_count = 0
+    else
+      @@tried_solutions = {}
+    end
   end
   
   def words=(new_words)
@@ -37,14 +40,16 @@ class HippyTree
   def self.step_word_count
     if USE_TREE
       @@word_count = @@word_count + 1
-    else
-      @@tried_solutions.length
     end
   end
   
   # The number of words in the whole tree
   def self.word_count
-    @@word_count
+    if USE_TREE
+      @@word_count
+    else
+      @@tried_solutions.length
+    end
   end
   
 end
