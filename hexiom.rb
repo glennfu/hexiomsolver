@@ -11,8 +11,8 @@ NO_SPACE = 9
 BLANK_SPACE = 8
 
 board = BoardLoader.load(LEVEL) #11)
-# board.print
-# puts ""
+board.print
+puts ""
 
 valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
 # puts "valid pieces: #{valid_pieces.inspect}"
@@ -22,7 +22,7 @@ solver = HexiomSolver.new(:tree => USE_TREE)
 answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
 if answer
   puts " Solution found"
-  # answer.print
+  answer.print
 else
   puts " No solution found"
 end
