@@ -142,9 +142,7 @@ class HexiomSolver
       
     options.sort! do |e,f|
       # Find highest surrounding spaces
-      comp = f[2] <=> e[2]
-      # comp = BoardLoader.surrounding_spaces[f[0]][f[1]] <=> BoardLoader.surrounding_spaces[e[0]][e[1]]
-      # puts "#{BoardLoader.surrounding_spaces[f[0]][f[1]]} <=> #{BoardLoader.surrounding_spaces[e[0]][e[1]]}"
+      comp = e[2] <=> f[2]
       if comp == 0
         # Then find highest score
         f[3] <=> e[3]
