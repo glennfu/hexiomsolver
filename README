@@ -1,0 +1,53 @@
+Hexiom Solver
+=============
+
+This is an attempt to write a solver for the game 'Hexiom' which can be found here:
+http://www.kongregate.com/games/Moonkey/hexiom
+
+
+To run
+======
+ruby hexiom.rb
+
+
+Optional arguments
+==================
+
+To select the level, do:
+-l #{level number}
+
+To choose which 'tried tracker' to use, do:
+-t #{true | false}
+
+
+Example 1
+=========
+
+ruby hexiom.rb -l 11 -t false
+
+ Level 11, Using Hash
+ Solution found
+ Took: 12.352264, recorded 9261 tries
+add_tried        0.0998789999999931
+area_is_valid    2.14741799999996
+flat             3.6891719999998
+is_valid?        1.05271600000002
+solved?          0.004008
+tried_include    0.117846999999976
+
+Example 2
+=========
+
+ruby hexiom.rb -n 3 -t true
+
+ Level 2, Using Tree
+ Solution found
+ Took: 0.033264, recorded 32 tries
+add_tried        0.003053
+area_is_valid    0.007756
+flat             0.000784
+is_valid?        0.003354
+solved?          0.000328
+tried_include    0.00222
+
+Copyright (c) 2008 GlennFu, LLC

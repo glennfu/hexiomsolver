@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/board_loader"
 require File.dirname(__FILE__) + "/hexiom_solver"
 require File.dirname(__FILE__) + "/bencher"
 
-LEVEL = $*[$*.index("-n")+1].to_i rescue 2
+LEVEL = $*[$*.index("-l")+1].to_i rescue 2
 USE_TREE = ($*[$*.index("-t")+1] == 'true' ? true : false) rescue false
 
 puts " Level #{LEVEL}, " + (USE_TREE ? "Using Tree" : "Using Hash")
