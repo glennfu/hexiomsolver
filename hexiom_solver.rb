@@ -81,17 +81,15 @@ class HexiomSolver
         
         tried_include = @tried.include?(b)
         
-        Bencher.start 'area_is_valid'
-        area_is_valid = area_is_valid?(b, x, y)
-        Bencher.stop 'area_is_valid'
-        
-        
         if !tried_include
           # puts flat
           Bencher.start 'add_tried'
           @tried.addBoard(b)
           Bencher.stop 'add_tried'
           
+          Bencher.start 'area_is_valid'
+          area_is_valid = area_is_valid?(b, x, y)
+          Bencher.stop 'area_is_valid'
           if area_is_valid
         
             if valid_pieces.length == 1
