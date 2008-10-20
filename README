@@ -22,6 +22,9 @@ To choose which 'tried tracker' to use, do:
 To show the before/after states of the board (verbose mode), do:
 -v #{true | false}
 
+To show the all recorded board states, do:
+-w
+
 
 Example 1
 =========
@@ -79,6 +82,22 @@ Hexiom-Solver 1
 Running:
 ruby hexiom-solver-1.rb
 will run an old version of the code.  I've kept it around for reference's sake, although the current versions, both with HippyTree and HippyHash, should be superior in every way by now.
+
+
+
+Interacting with the app while running
+======================================
+ctrl-c (interrupt) will kill the app and print out the current status of the board, like:
+^CInterrupted, here's how what I got so far:
+ Took: 0.704699, recorded 575 tries
+add_tried        0.109009
+....
+
+ctrl-z will print out the current status of the board without killing the app, like:
+^ZCurrent state:
+ Took: 0.895112, recorded 701 tries
+add_tried        0.129265
+....
 
 
 Copyright (c) 2008 GlennFu, LLC

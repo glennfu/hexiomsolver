@@ -27,4 +27,8 @@ class HippyHash
     @tried_solutions.length
   end
   
+  def print_words
+    puts @tried_solutions.keys.collect.join("\n")
+  end
+  
 end

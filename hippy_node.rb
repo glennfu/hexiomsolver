@@ -63,7 +63,7 @@ class HippyNode
       h = h.parent
     end
     
-    word
+    puts word
   end
   
   def printAllWords
@@ -71,8 +71,10 @@ class HippyNode
       printWord
     end
     
-    @children.each do |child|
-      child.printAllWords
+    unless @children.nil?
+      @children.each do |child|
+        child.printAllWords unless child.nil?
+      end
     end
   end
   

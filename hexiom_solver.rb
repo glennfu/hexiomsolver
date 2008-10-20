@@ -237,6 +237,8 @@ class HexiomSolver
     true
   end
 
-
+  def print_words
+    @tried.print_words
+  end
 
 end

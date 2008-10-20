@@ -29,7 +29,7 @@ class HippyTree
     answer
   end
   
-  def printAllWords
+  def print_words
     @root.printAllWords
   end
   

@@ -5,6 +5,7 @@ require File.dirname(__FILE__) + "/bencher"
 LEVEL = $*[$*.index("-l")+1].to_i rescue 2
 USE_TREE = ($*[$*.index("-t")+1] == 'true' ? true : false) rescue false
 VERBOSE = ($*[$*.index("-v")+1] == 'true' ? true : false) rescue false
+PRINT_WORDS = !$*.index("-w").nil?
 SCORING_MODE = !$*.index("-score").nil?
 
 NO_SPACE = 9
@@ -14,6 +15,12 @@ if SCORING_MODE
   puts "Scoring time for many levels #{USE_TREE ? "using Tree" : "using Hash"}:"
 
   start_time = Time.now
+
+  trap "TSTP" do
+    puts "Current state:"
+    puts " Took: #{(Time.now - start_time)}"
+    puts Bencher.inspect
+  end
 
   trap "INT" do
     puts "\nInterrupted, here's how what I got so far:"
@@ -38,11 +45,19 @@ if SCORING_MODE
 
 else
   solver = HexiomSolver.new(:tree => USE_TREE)
+  
+  trap "TSTP" do
+    puts "Current state:"
+    puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
+    puts Bencher.inspect
+    puts solver.print_words if PRINT_WORDS
+  end
 
   trap "INT" do
     puts "\nInterrupted, here's how what I got so far:"
     puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
     puts Bencher.inspect
+    puts solver.print_words if PRINT_WORDS
     exit
   end
   
@@ -69,5 +84,6 @@ else
   puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
   # puts "Bencher Results:"
   puts Bencher.inspect
+  puts solver.print_words if PRINT_WORDS
   
 end
