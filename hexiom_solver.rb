@@ -66,16 +66,14 @@ class HexiomSolver
   end
   
   def find_solution2(b, current_tree, levels)
+    # puts (current_tree + b).inspect
     
-    filled = fill_board(current_tree + b)
     if levels == 1
+      filled = fill_board(current_tree + b)
       return filled if solved?(filled)
     else
-      # filled.each_index do |row|
-      #   filled[row].each_index do |column|
-      #     return false unless is_valid?(filled, row, column)
-      #   end
-      # end
+      filled = fill_board(current_tree)
+      return nil unless area_is_valid?(filled, $last_spot[0], $last_spot[1])
     end
     
     b.uniq.each do |v|
@@ -91,64 +89,49 @@ class HexiomSolver
   def fill_board(array)
     # puts array.inspect
     
-    count = 0
     empty_board = BoardLoader.empty_board
-    b = empty_board.clone
+    b = []
     
-    # clone isn't creating a fresh copy like i need
+    count = 0
     empty_board.each_index do |row|
-      b[row] = [] 
+      b[row] = []
       empty_board[row].each_index do |column|
-        b[row][column] = BoardLoader.empty_board[row][column]
-      end
-    end
-    
-    # puts b.inspect
-    
-    b.each_index do |row|
-      b[row].each_index do |column|
-        if b[row][column] == BLANK_SPACE
-          # puts "filling array #{array[count]}"
-          b[row][column] = array[count]
-          count += 1
+        if empty_board[row][column] == BLANK_SPACE
+          if count < array.length
+            b[row][column] = array[count]
+            count += 1
+            if count == array.length
+              $last_spot = [row, column]
+            end
+          else
+            b[row][column] = BLANK_SPACE
+          end
+        else
+          b[row][column] = empty_board[row][column]
         end
       end
     end
     
-    # puts b.inspect
+    if $last_spot.nil?
+      $last_spot = [empty_board.length-1, empty_board[0].length-1]
+    end
+      
     
     b
   end
   
   def remove_value(board, value)
+    Bencher.start 'remove_value'
     b = board.clone
-    found = false
-
-    b.delete_if { |x| 
-      if !found && x == value
-        found = true
-        true
-      else
-        false
-      end
-    }
-
+    b.delete_at(b.index(value))
+    Bencher.stop 'remove_value'
     b
   end
 
   def find_solution(b, valid_pieces)
   
-    last_piece = nil
-  
-    valid_pieces.each_with_index do |p, index|
-      # Don't use the same piece twice in a row
-      if last_piece.nil?
-        last_piece = p
-      elsif last_piece == p
-        next
-      else
-        last_piece = p
-      end
+    # Don't use the same piece twice in a row
+    valid_pieces.uniq.each_with_index do |p, index|
     
       ranked_options(b, p).each do |x, y|
         b[x][y] = p
@@ -206,7 +189,7 @@ class HexiomSolver
       
     options.sort! do |e,f|
       # Find highest surrounding spaces
-      comp = e[2] <=> f[2]
+      comp = f[2] <=> e[2]
       # NOTE: The opposite order works better for level some levels
       # I need to figure out a smarter way to order these that work for all levels!
       
