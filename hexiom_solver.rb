@@ -19,13 +19,15 @@ class HexiomSolver
   end
   
   def solved?(b)
+    Bencher.start 'solved?'
     b.each_index do |row|
       b[row].each_index do |column|
         piece = b[row][column]
         return false if piece != NO_SPACE && piece != BLANK_SPACE && piece.abs != surrounding_pieces(b, row, column)
       end
     end
-  
+    Bencher.stop 'solved?'
+
     true
   end
 
@@ -68,6 +70,7 @@ class HexiomSolver
     last_piece = nil
   
     valid_pieces.each_with_index do |p, index|
+      # Don't use the same piece twice in a row
       if last_piece.nil?
         last_piece = p
       elsif last_piece == p
@@ -78,32 +81,23 @@ class HexiomSolver
     
       ranked_options(b, p).each do |x, y|
         b[x][y] = p
-        
-        tried_include = @tried.include?(b)
-        
-        if !tried_include
-          # puts flat
-          Bencher.start 'add_tried'
-          @tried.addBoard(b)
-          Bencher.stop 'add_tried'
-          
-          Bencher.start 'area_is_valid'
-          area_is_valid = area_is_valid?(b, x, y)
-          Bencher.stop 'area_is_valid'
-          if area_is_valid
-        
-            if valid_pieces.length == 1
-            
-              Bencher.start 'solved?'
-              solved = solved?(b)
-              Bencher.stop 'solved?'
-            
-              return b if solved
-            end
 
+        unless @tried.include?(b)
+          # Save this state since we haven't hit it already
+          @tried.addBoard(b)
+
+          # If we haven't come to a dead-end state
+          if area_is_valid?(b, x, y)
+
+            # Return if it's the answer!
+            # First check to make sure we've used all the pieces
+            return b if valid_pieces.length == 1 && solved?(b)
+
+            # If not, remove the current piece
             new_pieces = valid_pieces.clone
             new_pieces.delete_at(index)
 
+            # And send the remaining pieces on to the next recursion
             answer = find_solution(b, new_pieces)
             return answer if answer
           end
@@ -113,7 +107,6 @@ class HexiomSolver
       end
     
     end
-  
   
     nil
   end
@@ -142,7 +135,11 @@ class HexiomSolver
       
     options.sort! do |e,f|
       # Find highest surrounding spaces
-      comp = e[2] <=> f[2] # NOTE: The opposite order works better for level 6 only it seems...
+      comp = e[2] <=> f[2]
+      # NOTE: The opposite order works better for level some levels
+      # I need to figure out a smarter way to order these that work for all levels!
+      
+      
       if comp == 0
         # Then find highest score
         f[3] <=> e[3]
@@ -180,6 +177,8 @@ class HexiomSolver
   end
 
   def area_is_valid?(b, row, column)
+    Bencher.start 'area_is_valid'
+
     Bencher.start 'is_valid?'
     valid = is_valid?(b, row, column)
     Bencher.stop 'is_valid?'
@@ -195,6 +194,7 @@ class HexiomSolver
       end
     end
   
+    Bencher.stop 'area_is_valid'
     true
   end
 

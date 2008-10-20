@@ -7,7 +7,9 @@ class HippyHash
   end
 
   def addBoard(board)
+    Bencher.start 'add_tried'
     @tried_solutions[@flat] = true
+    Bencher.stop 'add_tried'
   end
 
   def include?(board)

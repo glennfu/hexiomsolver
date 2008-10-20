@@ -14,7 +14,9 @@ class HippyTree
   end
   
   def addBoard(board)
+    Bencher.start 'add_tried'
     @root.addArray(board.flatten, 0)
+    Bencher.stop 'add_tried'
   end
   
   def include?(board)
