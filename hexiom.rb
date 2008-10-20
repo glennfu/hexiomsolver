@@ -14,6 +14,14 @@ if SCORING_MODE
   puts "Scoring time for many levels #{USE_TREE ? "using Tree" : "using Hash"}:"
 
   start_time = Time.now
+
+  trap "INT" do
+    puts "\nInterrupted, here's how what I got so far:"
+    puts " Took: #{(Time.now - start_time)}"
+    puts Bencher.inspect
+    exit
+  end
+
   [2, 3, 4, 6, 11].each do |level|
     print "."; $stdout.flush
     board = BoardLoader.load(level)
@@ -29,8 +37,16 @@ if SCORING_MODE
   puts Bencher.inspect
 
 else
-  puts " Level #{LEVEL}, " + (USE_TREE ? "Using Tree" : "Using Hash")
+  solver = HexiomSolver.new(:tree => USE_TREE)
 
+  trap "INT" do
+    puts "\nInterrupted, here's how what I got so far:"
+    puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
+    puts Bencher.inspect
+    exit
+  end
+  
+  puts " Level #{LEVEL}, " + (USE_TREE ? "Using Tree" : "Using Hash")
 
   board = BoardLoader.load(LEVEL) #11)
   if VERBOSE
@@ -42,7 +58,6 @@ else
   # puts "valid pieces: #{valid_pieces.inspect}"
 
   start_time = Time.now
-  solver = HexiomSolver.new(:tree => USE_TREE)
   answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
   if answer
     puts " Solution found"
@@ -54,4 +69,5 @@ else
   puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
   # puts "Bencher Results:"
   puts Bencher.inspect
+  
 end
