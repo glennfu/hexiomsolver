@@ -7,6 +7,7 @@ USE_TREE = ($*[$*.index("-t")+1] == 'true' ? true : false) rescue false
 VERBOSE = ($*[$*.index("-v")+1] == 'true' ? true : false) rescue false
 PRINT_WORDS = !$*.index("-w").nil?
 SCORING_MODE = !$*.index("-score").nil?
+JOHNS_IDEA = !$*.index("-j").nil?
 
 NO_SPACE = 9
 BLANK_SPACE = 8
@@ -72,22 +73,38 @@ else
     board.print
     puts ""
   end
-
-  valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
-  # puts "valid pieces: #{valid_pieces.inspect}"
-
-  start_time = Time.now
-  answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
-  if answer
-    puts " Solution found"
-    answer.print if VERBOSE
-  else
-    puts " No solution found"
-  end
-
-  puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
-  # puts "Bencher Results:"
-  puts Bencher.inspect
-  puts solver.print_words if PRINT_WORDS
   
+  if JOHNS_IDEA
+    the_board = []
+
+    the_board[2] = board
+    
+    # get flat board
+    the_board = the_board[2]
+    the_board.flatten!.reject! { |i| i==9 || i<0 }
+
+    # number of levels in the tree
+    levels = the_board.length
+
+    # start the loop
+    solver.find_solution2(the_board, [], levels)
+  else
+
+    valid_pieces = board.flatten.reject{|x| (x == NO_SPACE || x < 0 || x == BLANK_SPACE) }.sort.reverse
+    # puts "valid pieces: #{valid_pieces.inspect}"
+
+    start_time = Time.now
+    answer = solver.find_solution(BoardLoader.empty_board, valid_pieces)
+    if answer
+      puts " Solution found"
+      answer.print if VERBOSE
+    else
+      puts " No solution found"
+    end
+
+    puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
+    # puts "Bencher Results:"
+    puts Bencher.inspect
+    puts solver.print_words if PRINT_WORDS
+  end  
 end

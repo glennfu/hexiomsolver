@@ -64,6 +64,37 @@ class HexiomSolver
 
     spaces
   end
+  
+  def find_solution2(b, current_tree, levels)
+    
+    if levels == 1
+      if solved?(b)
+        puts(values + current_tree)
+      end
+    end
+    
+    b.uniq.each do |v|
+      t = current_tree.clone << v
+      find_solution2(remove_value(b, v), t, levels-1)
+    end
+    
+  end
+  
+  def remove_value(board, value)
+    b = board.clone
+    found = false
+
+    b.delete_if { |x| 
+      if !found && x == value
+        found = true
+        true
+      else
+        false
+      end
+    }
+
+    b
+  end
 
   def find_solution(b, valid_pieces)
   
