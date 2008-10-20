@@ -20,6 +20,8 @@ class Bencher
   end
   
   def self.inspect
+    return "" if @@benchmarks.empty?
+    
     result = []
     
     max_length = @@benchmarks.max {|a,b| a.first.length <=> b.first.length }.first.length

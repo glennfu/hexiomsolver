@@ -67,17 +67,57 @@ class HexiomSolver
   
   def find_solution2(b, current_tree, levels)
     
+    filled = fill_board(current_tree + b)
     if levels == 1
-      if solved?(b)
-        puts(values + current_tree)
-      end
+      return filled if solved?(filled)
+    else
+      # filled.each_index do |row|
+      #   filled[row].each_index do |column|
+      #     return false unless is_valid?(filled, row, column)
+      #   end
+      # end
     end
     
     b.uniq.each do |v|
       t = current_tree.clone << v
-      find_solution2(remove_value(b, v), t, levels-1)
+      sol = find_solution2(remove_value(b, v), t, levels-1)
+      return sol unless sol.nil?
     end
     
+    return nil
+  end
+  
+  # fill the board with a one dimensional array
+  def fill_board(array)
+    # puts array.inspect
+    
+    count = 0
+    empty_board = BoardLoader.empty_board
+    b = empty_board.clone
+    
+    # clone isn't creating a fresh copy like i need
+    empty_board.each_index do |row|
+      b[row] = [] 
+      empty_board[row].each_index do |column|
+        b[row][column] = BoardLoader.empty_board[row][column]
+      end
+    end
+    
+    # puts b.inspect
+    
+    b.each_index do |row|
+      b[row].each_index do |column|
+        if b[row][column] == BLANK_SPACE
+          # puts "filling array #{array[count]}"
+          b[row][column] = array[count]
+          count += 1
+        end
+      end
+    end
+    
+    # puts b.inspect
+    
+    b
   end
   
   def remove_value(board, value)
