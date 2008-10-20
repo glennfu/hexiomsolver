@@ -16,12 +16,14 @@ if SCORING_MODE
 
   start_time = Time.now
 
+  # Ctrl + Z
   trap "TSTP" do
     puts "Current state:"
     puts " Took: #{(Time.now - start_time)}"
     puts Bencher.inspect
   end
 
+  # Ctrl + C
   trap "INT" do
     puts "\nInterrupted, here's how what I got so far:"
     puts " Took: #{(Time.now - start_time)}"
@@ -46,6 +48,7 @@ if SCORING_MODE
 else
   solver = HexiomSolver.new(:tree => USE_TREE)
   
+  # Ctrl + Z
   trap "TSTP" do
     puts "Current state:"
     puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
@@ -53,6 +56,7 @@ else
     puts solver.print_words if PRINT_WORDS
   end
 
+  # Ctrl + C
   trap "INT" do
     puts "\nInterrupted, here's how what I got so far:"
     puts " Took: #{(Time.now - start_time)}, recorded #{solver.tried_count} tries"
