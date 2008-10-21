@@ -39,7 +39,7 @@ class BoardLoader
         end
       end
 
-      board << line.split(" ").collect(&:to_i)
+      board << line.split(" ").collect{|a|a.to_i}
     end
 
     board
